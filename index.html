@@ -850,8 +850,24 @@ async function startCheckout(){
     const data=await res.json();
     if(!res.ok){alert('Erro ao gerar Pix: '+(data.error||'tente novamente.'));document.getElementById('pixOverlay').classList.remove('active');return;}
     document.getElementById('pixCode').textContent=data.pixCode||'—';
-    if(data.pixImage) document.getElementById('pixQR').src=data.pixImage;
-    else if(data.pixBase64) document.getElementById('pixQR').src=`data:image/png;base64,${data.pixBase64}`;
+    
+    // tenta imagem da SigiloPay, senão gera QR Code localmente
+    const qrImg=document.getElementById('pixQR');
+    if(data.pixBase64){
+      qrImg.src=`data:image/png;base64,${data.pixBase64}`;
+    } else if(data.pixImage){
+      qrImg.src=data.pixImage;
+      // fallback: se a imagem da SigiloPay falhar, gera localmente
+      qrImg.onerror=()=>{
+        const code=encodeURIComponent(data.pixCode||'');
+        qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${code}`;
+        qrImg.onerror=null;
+      };
+    } else if(data.pixCode){
+      // nenhuma imagem — gera o QR Code a partir do código
+      const code=encodeURIComponent(data.pixCode);
+      qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${code}`;
+    }
     if(data.transactionId) startPolling(data.transactionId);
   } catch(e){alert('Erro de conexão. Tente novamente.');document.getElementById('pixOverlay').classList.remove('active');}
 }
