@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshBowl — Açaí & Sorvetes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF8;
+  --bg-alt:#F2F1EE;
+  --card:#FFFFFF;
+  --line:#E4E2DD;
+  --purple:#3B1F6E;
+  --purple-mid:#5B32A8;
+  --purple-light:#8B68D4;
+  --lime:#C8F135;
+  --lime-dark:#A8D010;
+  --ink:#1A1A1A;
+  --muted:#6B6860;
+  --faint:#9B9890;
+  --red:#E03B3B;
+  --white:#FFFFFF;
+  --shadow:0 2px 12px rgba(59,31,110,0.08);
+  --shadow-md:0 6px 24px rgba(59,31,110,0.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
+.page{display:none;}
+.page.active{display:block;}
+h1,h2,.logo,.cat-name,.prod-name,.sheet-title,.pix-h,.confirmed-h,.cart-bar-total,.price-row-val{font-family:'Fredoka',sans-serif;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(250,250,248,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:13px 20px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:22px;font-weight:700;color:var(--purple);letter-spacing:-0.01em;}
+.logo span{color:var(--purple-mid);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.cart-btn{position:relative;background:var(--purple);border:none;border-radius:12px;padding:9px 16px;color:#fff;font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s;}
+.cart-btn:hover{background:var(--purple-mid);}
+.cart-count{position:absolute;top:-7px;right:-7px;background:var(--lime);color:var(--purple);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.cart-count.hidden{display:none;}
+.user-btn{background:none;border:1.5px solid var(--line);color:var(--muted);padding:8px 14px;border-radius:10px;font-size:13px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
+.user-btn:hover{border-color:var(--purple);color:var(--purple);}
+
+/* HOME HERO */
+.home-hero{padding:48px 20px 24px;text-align:center;max-width:520px;margin:0 auto;}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple-light);margin-bottom:14px;}
+.home-hero h1{font-size:clamp(34px,9vw,58px);font-weight:700;letter-spacing:-0.02em;line-height:1.05;margin-bottom:14px;color:var(--purple);}
+.home-hero h1 em{font-style:normal;color:var(--purple-mid);}
+.home-hero p{color:var(--muted);font-size:15px;max-width:340px;margin:0 auto;}
+
+/* BOWL SVG HERO */
+.bowl-wrap{margin:24px auto 0;width:160px;height:160px;position:relative;}
+.bowl-wrap svg{width:100%;height:100%;}
+
+/* PROMO */
+.promo-wrap{padding:28px 20px 0;max-width:520px;margin:0 auto;}
+.promo-banner{background:var(--purple);border-radius:20px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;}
+.promo-banner::after{content:'🍇';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:80px;opacity:0.12;}
+.promo-tag{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--lime);margin-bottom:5px;}
+.promo-value{font-family:'Fredoka',sans-serif;font-size:24px;font-weight:700;color:#fff;line-height:1;}
+.promo-desc{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;}
+.promo-cta{background:var(--lime);color:var(--purple);border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;flex-shrink:0;}
+.promo-cta:hover{background:var(--lime-dark);}
+
+/* CATEGORIES */
+.sec-label{text-align:center;margin:32px 0 14px;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:0.12em;}
+.categories-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:520px;margin:0 auto;padding:0 20px 90px;}
+.cat-card{background:var(--white);border:1.5px solid var(--line);border-radius:20px;padding:26px 16px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);}
+.cat-card:hover{border-color:var(--purple);transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.cat-card:active{transform:translateY(-1px);}
+.cat-icon{font-size:40px;margin-bottom:10px;}
+.cat-name{font-size:17px;font-weight:600;color:var(--purple);}
+.cat-from{font-size:11px;color:var(--faint);margin-top:4px;}
+
+/* CATEGORY PAGE */
+.page-header{padding:13px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);position:sticky;top:58px;background:var(--bg);z-index:40;}
+.back-btn{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:2px 6px;transition:color .15s;}
+.back-btn:hover{color:var(--purple);}
+.page-title{font-family:'Fredoka',sans-serif;font-size:19px;font-weight:600;color:var(--purple);}
+.type-tabs{display:flex;gap:8px;padding:13px 20px;overflow-x:auto;border-bottom:1px solid var(--line);}
+.type-tab{background:var(--bg-alt);border:1.5px solid var(--line);color:var(--muted);padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Inter',sans-serif;}
+.type-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+.products-list{padding:14px 20px 120px;display:flex;flex-direction:column;gap:10px;}
+.product-card{background:var(--white);border:1.5px solid var(--line);border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);}
+.product-card:hover{border-color:var(--purple-light);box-shadow:var(--shadow-md);}
+.prod-name{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.prod-desc{font-size:12px;color:var(--faint);}
+.prod-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.prod-price{font-family:'Fredoka',sans-serif;font-size:17px;font-weight:600;color:var(--purple);}
+.add-btn{background:var(--purple);border:none;color:#fff;width:34px;height:34px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.add-btn:hover{background:var(--purple-mid);}
+
+/* CART */
+.cart-empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.cart-empty .icon{font-size:52px;margin-bottom:16px;}
+.cart-empty h3{font-family:'Fredoka',sans-serif;margin-bottom:8px;font-size:20px;color:var(--purple);}
+.cart-items{padding:14px 20px;display:flex;flex-direction:column;gap:10px;padding-bottom:120px;}
+.cart-item{background:var(--white);border:1.5px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);}
+.cart-item-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.ci-name{font-size:14px;font-weight:600;color:var(--ink);}
+.ci-price{font-family:'Fredoka',sans-serif;font-size:16px;font-weight:600;color:var(--purple);white-space:nowrap;}
+.ci-remove{background:none;border:none;color:var(--faint);font-size:16px;cursor:pointer;margin-left:10px;flex-shrink:0;transition:color .15s;}
+.ci-remove:hover{color:var(--red);}
+.ci-details{font-size:12px;color:var(--muted);line-height:1.6;}
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(250,250,248,0.97);backdrop-filter:blur(12px);border-top:1.5px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:14px;z-index:40;}
+.cart-bar-label{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:0.05em;}
+.cart-bar-total{font-size:22px;font-weight:700;color:var(--purple);}
+.checkout-btn{flex:1;background:var(--purple);border:none;color:#fff;padding:14px;border-radius:14px;font-weight:600;font-size:15px;cursor:pointer;transition:background .15s;font-family:'Inter',sans-serif;}
+.checkout-btn:hover{background:var(--purple-mid);}
+
+/* FLOATING CART */
+.floating-cart{position:fixed;bottom:24px;right:20px;background:var(--purple);border:none;border-radius:16px;padding:13px 20px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;z-index:39;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(59,31,110,0.3);opacity:0;pointer-events:none;transform:translateY(10px);transition:all .25s;font-family:'Inter',sans-serif;}
+.floating-cart.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(26,26,26,0.55);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.overlay.active{display:flex;}
+.sheet{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;border-top:1.5px solid var(--line);}
+.sheet-handle{width:40px;height:4px;background:var(--line);border-radius:2px;margin:12px auto 0;}
+.sheet-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;}
+.sheet-title{font-size:19px;font-weight:700;color:var(--purple);}
+.sheet-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+.sheet-close{background:var(--bg-alt);border:none;color:var(--muted);width:32px;height:32px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:10px;transition:all .15s;}
+.sheet-close:hover{background:var(--line);color:var(--ink);}
+
+/* CUSTOMIZER */
+.steps-bar{display:flex;gap:6px;padding:14px 20px 10px;}
+.sdot{flex:1;height:3px;border-radius:2px;background:var(--line);transition:background .2s;}
+.sdot.done{background:var(--purple-light);}
+.sdot.active{background:var(--purple);}
+.price-row{padding:10px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(59,31,110,0.04);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.price-row-label{font-size:12px;color:var(--muted);}
+.price-row-val{font-size:20px;font-weight:700;color:var(--purple);}
+.step-body{padding:16px 20px;}
+.step-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--faint);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.free-badge{background:rgba(200,241,53,0.25);color:#5A7A00;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;}
+.opts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px;margin-bottom:16px;}
+.opt{background:var(--bg-alt);border:1.5px solid var(--line);color:var(--ink);padding:11px 8px;border-radius:12px;font-size:13px;cursor:pointer;text-align:center;transition:all .15s;font-family:'Inter',sans-serif;}
+.opt:hover{border-color:var(--purple-light);background:var(--white);}
+.opt.sel{background:rgba(59,31,110,0.08);border-color:var(--purple);color:var(--purple);}
+.opt-price{font-size:10px;color:var(--faint);margin-top:3px;}
+.opt.sel .opt-price{color:var(--purple-light);}
+.step-nav{padding:14px 20px;display:flex;gap:10px;border-top:1px solid var(--line);}
+.prev-btn{background:var(--bg-alt);border:1.5px solid var(--line);color:var(--muted);padding:13px 18px;border-radius:13px;font-weight:600;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;}
+.next-btn{flex:1;background:var(--purple);border:none;color:#fff;padding:13px;border-radius:13px;font-weight:600;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;}
+.next-btn:hover{background:var(--purple-mid);}
+.next-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+/* ADD TO CART CONFIRM BUTTON */
+.next-btn.confirm{background:var(--lime);color:var(--purple);}
+.next-btn.confirm:hover{background:var(--lime-dark);}
+
+/* AUTH */
+.auth-tabs{display:flex;border-bottom:1.5px solid var(--line);}
+.auth-tab{flex:1;padding:12px;text-align:center;background:none;border:none;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:'Inter',sans-serif;}
+.auth-tab.active{color:var(--purple);border-bottom-color:var(--purple);}
+.auth-body{padding:18px 20px 24px;}
+.fg{margin-bottom:13px;}
+.fg label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;font-weight:600;}
+.fi{width:100%;background:var(--bg-alt);border:1.5px solid var(--line);color:var(--ink);padding:11px 12px;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;transition:border-color .15s;}
+.fi:focus{outline:none;border-color:var(--purple);background:var(--white);}
+.addr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.addr-sep{font-size:12px;color:var(--muted);margin-bottom:10px;margin-top:4px;display:flex;align-items:center;gap:6px;font-weight:500;}
+.auth-submit{width:100%;background:var(--purple);border:none;color:#fff;padding:13px;border-radius:13px;font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;font-family:'Inter',sans-serif;transition:background .15s;}
+.auth-submit:hover{background:var(--purple-mid);}
+
+/* PIX */
+.pix-body{padding:20px;text-align:center;}
+.pix-h{font-size:22px;font-weight:700;color:var(--purple);margin-bottom:4px;}
+.pix-s{font-size:13px;color:var(--muted);margin-bottom:18px;}
+.pix-lbl{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:0.06em;}
+.pix-val{font-family:'Fredoka',sans-serif;font-size:32px;font-weight:700;color:var(--purple);margin-bottom:18px;}
+.qr-wrap{background:var(--bg-alt);border-radius:16px;padding:14px;display:inline-block;margin-bottom:16px;border:1.5px solid var(--line);}
+.qr-wrap img{display:block;width:180px;height:180px;}
+.pix-code-box{background:var(--bg-alt);border:1.5px solid var(--line);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;text-align:left;}
+.pix-code-txt{font-size:11px;color:var(--muted);word-break:break-all;}
+.pix-copy{background:var(--purple);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:'Inter',sans-serif;}
+.pix-wait{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--faint);margin-bottom:12px;}
+.pdot{width:7px;height:7px;border-radius:50%;background:#F59E0B;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+.pix-note{font-size:12px;color:var(--faint);}
+.confirmed-box{padding:40px 20px;text-align:center;}
+.confirmed-icon{font-size:60px;margin-bottom:16px;}
+.confirmed-h{font-size:24px;font-weight:700;color:var(--purple);margin-bottom:8px;}
+.confirmed-s{color:var(--muted);font-size:14px;line-height:1.7;}
+
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none;}
+
+/* FOOTER */
+footer{padding:24px 20px;text-align:center;color:var(--faint);font-size:12px;border-top:1.5px solid var(--line);}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<header>
+  <div class="logo">🍇 FreshBowl</div>
+  <div class="header-right">
+    <button class="user-btn" id="userBtn" onclick="openAuth()">Entrar</button>
+    <button class="cart-btn" onclick="goToCart()">
+      🛒
+      <span class="cart-count hidden" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <div class="hero-eyebrow">🍇 Açaí · Sorvete · Milkshake · Picolé</div>
+    <h1>Fresh<em>Bowl</em></h1>
+    <p>Monte do seu jeito, pague com Pix e receba na porta. Rápido e sem complicação.</p>
+  </div>
+  <div class="promo-wrap">
+    <div class="promo-banner">
+      <div class="promo-left">
+        <div class="promo-tag">🔥 Promoção do dia</div>
+        <div class="promo-value">2 açaís 300ml por R$ 19,90</div>
+        <div class="promo-desc">Aproveite enquanto durar!</div>
+      </div>
+      <button class="promo-cta" onclick="goToCategory('acai')">Pedir agora</button>
+    </div>
+  </div>
+  <div class="sec-label">O que você quer hoje?</div>
+  <div class="categories-grid">
+    <div class="cat-card" onclick="goToCategory('acai')">
+      <div class="cat-icon">🍇</div>
+      <div class="cat-name">Açaí</div>
+      <div class="cat-from">A partir de R$ 10,99</div>
+    </div>
+    <div class="cat-card" onclick="goToCategory('sorvete')">
+      <div class="cat-icon">🍦</div>
+      <div class="cat-name">Sorvete</div>
+      <div class="cat-from">A partir de R$ 3,99</div>
+    </div>
+    <div class="cat-card" onclick="goToCategory('milkshake')">
+      <div class="cat-icon">🥤</div>
+      <div class="cat-name">Milkshake</div>
+      <div class="cat-from">A partir de R$ 12,99</div>
+    </div>
+    <div class="cat-card" onclick="goToCategory('picole')">
+      <div class="cat-icon">🍭</div>
+      <div class="cat-name">Picolés</div>
+      <div class="cat-from">A partir de R$ 2,99</div>
+    </div>
+  </div>
+  <footer>FreshBowl · Pagamento seguro via Pix · Entrega combinada após confirmação</footer>
+</div>
+
+<!-- CATEGORY -->
+<div id="page-category" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <span class="page-title" id="catTitle"></span>
+  </div>
+  <div class="type-tabs" id="typeTabs" style="display:none;"></div>
+  <div class="products-list" id="productsList"></div>
+</div>
+
+<!-- CART -->
+<div id="page-cart" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <span class="page-title">Meu Carrinho</span>
+  </div>
+  <div id="cartContent"></div>
+  <div class="cart-bar" id="cartBar" style="display:none;">
+    <div class="cart-bar-info">
+      <div class="cart-bar-label">Total</div>
+      <div class="cart-bar-total" id="cartBarTotal"></div>
+    </div>
+    <button class="checkout-btn" onclick="startCheckout()">Finalizar pedido →</button>
+  </div>
+</div>
+
+<!-- FLOATING CART -->
+<button class="floating-cart" id="floatingCart" onclick="goToCart()">
+  🛒 Ver carrinho · <span id="floatingTotal"></span>
+</button>
+
+<!-- CUSTOMIZER OVERLAY -->
+<div class="overlay" id="custOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title" id="custTitle">Montar pedido</div>
+        <div class="sheet-sub" id="custSub"></div>
+      </div>
+      <button class="sheet-close" onclick="closeCustomizer()">✕</button>
+    </div>
+    <div class="steps-bar" id="stepsBar"></div>
+    <div class="price-row">
+      <span class="price-row-label">Subtotal</span>
+      <span class="price-row-val" id="pricePreview">R$ 0,00</span>
+    </div>
+    <div class="step-body" id="stepBody"></div>
+    <div class="step-nav">
+      <button class="prev-btn" id="prevBtn" onclick="prevStep()" style="display:none;">← Voltar</button>
+      <button class="next-btn" id="nextBtn" onclick="nextStep()">Continuar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH OVERLAY -->
+<div class="overlay" id="authOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="padding:14px 20px 0;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:18px;font-weight:700;">Minha conta</div>
+      <button class="sheet-close" onclick="closeAuth()">✕</button>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Entrar</button>
+      <button class="auth-tab" id="tabReg" onclick="switchTab('reg')">Criar conta</button>
+    </div>
+    <div id="loginForm" class="auth-body">
+      <div class="fg"><label>E-mail</label><input type="email" class="fi" id="loginEmail" placeholder="seu@email.com"></div>
+      <div class="fg"><label>Senha</label><input type="password" class="fi" id="loginPwd" placeholder="••••••••"></div>
+      <button class="auth-submit" onclick="doLogin()">Entrar</button>
+    </div>
+    <div id="regForm" class="auth-body" style="display:none;">
+      <div class="fg"><label>Nome completo</label><input type="text" class="fi" id="rName" placeholder="Seu nome completo"></div>
+      <div class="fg"><label>E-mail</label><input type="email" class="fi" id="rEmail" placeholder="seu@email.com"></div>
+      <div class="fg"><label>Senha</label><input type="password" class="fi" id="rPwd" placeholder="Crie uma senha"></div>
+      <div class="fg"><label>WhatsApp</label><input type="tel" class="fi" id="rPhone" placeholder="(00) 00000-0000" maxlength="15"></div>
+      <div class="fg"><label>CPF</label><input type="text" class="fi" id="rCPF" placeholder="000.000.000-00" maxlength="14"></div>
+      <div class="addr-sep">📍 Endereço de entrega</div>
+      <div class="addr-row">
+        <div class="fg"><label>Rua / Avenida</label><input type="text" class="fi" id="rStreet" placeholder="Nome da rua"></div>
+        <div class="fg"><label>Número</label><input type="text" class="fi" id="rNum" placeholder="123"></div>
+      </div>
+      <div class="fg"><label>Complemento (opcional)</label><input type="text" class="fi" id="rComp" placeholder="Apto 2, Casa B..."></div>
+      <div class="fg"><label>Bairro</label><input type="text" class="fi" id="rNeigh" placeholder="Seu bairro"></div>
+      <div class="addr-row">
+        <div class="fg"><label>Cidade</label><input type="text" class="fi" id="rCity" placeholder="Sua cidade"></div>
+        <div class="fg"><label>Estado</label><input type="text" class="fi" id="rState" placeholder="SC" maxlength="2" style="text-transform:uppercase;"></div>
+      </div>
+      <button class="auth-submit" onclick="doRegister()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- PIX OVERLAY -->
+<div class="overlay" id="pixOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="pixPending" class="pix-body">
+      <div class="pix-h">Pague com Pix 💜</div>
+      <div class="pix-s">Escaneie o QR Code ou copie o código abaixo</div>
+      <div class="pix-lbl">Total a pagar</div>
+      <div class="pix-val" id="pixVal"></div>
+      <div class="qr-wrap"><img id="pixQR" src="" alt="QR Code" width="180" height="180"></div>
+      <div class="pix-code-box">
+        <span class="pix-code-txt" id="pixCode">—</span>
+        <button class="pix-copy" onclick="copyPix()">Copiar</button>
+      </div>
+      <div class="pix-wait"><span class="pdot"></span> Aguardando pagamento...</div>
+      <div class="pix-note">Assim que o pagamento for confirmado, essa tela atualiza automaticamente.</div>
+    </div>
+    <div id="pixDone" class="confirmed-box" style="display:none;">
+      <div class="confirmed-icon">🎉</div>
+      <div class="confirmed-h">Pedido confirmado!</div>
+      <div class="confirmed-s">Seu FreshBowl está sendo preparado com carinho 🍇<br>Em breve entraremos em contato para combinar a entrega.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== MENU =====
+const menu = {
+  acai: {
+    sizes:[{n:'300ml',p:10.99},{n:'400ml',p:13.99},{n:'500ml',p:16.99},{n:'700ml',p:21.99},{n:'1 Litro',p:30.99}],
+    bases:['Tradicional','Banana','Morango','Cupuaçu','Maracujá','Creme de Ninho','Chocolate','Paçoca'],
+    fruits:['Banana','Morango','Kiwi','Uva','Manga','Abacaxi','Maçã','Pêssego','Coco','Mirtilo'],
+    freeFruits:2,
+    toppings:['Leite condensado','Chocolate','Chocolate branco','Morango','Caramelo','Doce de leite','Nutella','Ovomaltine','Mel'],
+    freeToppings:2,
+    complements:['Granola','Leite em pó','Paçoca','Amendoim','Castanha','Coco ralado','Chocoball',"M&M's",'Confete','Gotas de chocolate','Oreo','Bis','KitKat','Sonho de Valsa','Ouro Branco','Bombom','Marshmallow','Jujuba','Tubetes','Suspiro','Chantilly'],
+    freeComplements:4,
+    extraPrice:2,
+    nutellaOvoPrice:3,
+    extras:[{n:'Fruta extra',p:2},{n:'Cobertura extra',p:2},{n:'Complemento extra',p:2},{n:'Nutella extra',p:3},{n:'Ovomaltine extra',p:3}]
+  },
+  sorvete:{
+    types:['Casquinha','Copo'],
+    sizes:{
+      'Casquinha':[{n:'1 bola',p:3.99},{n:'2 bolas',p:6.99},{n:'3 bolas',p:9.99}],
+      'Copo':[{n:'Pequeno',p:5.99},{n:'Médio',p:8.99},{n:'Grande',p:11.99}]
+    },
+    flavors:['Baunilha','Chocolate','Morango','Flocos','Creme','Napolitano','Coco','Limão','Maracujá','Abacaxi','Uva','Manga','Milho Verde','Doce de Leite','Paçoca','Pistache','Café','Menta com Chocolate','Cookies & Cream','Chiclete','Brownie','Ninho','Churros','Romeu e Julieta','Açaí'],
+    toppings:['Chocolate','Chocolate branco','Morango','Caramelo','Doce de leite','Nutella','Ovomaltine'],
+    toppingPrice:2,
+    extras:[{n:'Chantilly',p:1.99},{n:'Granulado',p:0.99},{n:'Oreo',p:1.99},{n:'KitKat',p:2.99},{n:'Bis',p:1.99},{n:'Confete',p:0.99},{n:"M&M's",p:2.99}]
+  },
+  milkshake:{
+    sizes:[{n:'300ml',p:12.99},{n:'500ml',p:16.99},{n:'700ml',p:21.99}],
+    flavors:['Chocolate','Baunilha','Morango','Oreo','KitKat','Bis','Paçoca','Ninho','Nutella','Ovomaltine','Doce de leite','Café','Churros','Pistache','Brownie','Prestígio','Coco','Banana','Menta com Chocolate'],
+    toppings:['Chocolate','Chocolate branco','Morango','Caramelo','Doce de leite','Nutella'],
+    toppingPrice:2,
+    extras:[{n:'Chantilly',p:1.99},{n:'Bombom',p:2.99},{n:'Oreo',p:1.99},{n:'KitKat',p:2.99},{n:'Bis',p:1.99},{n:'Leite em pó',p:1.99}]
+  },
+  picole:{
+    types:[
+      {n:'Tradicional',p:2.99,flavors:['Limão','Uva','Morango','Abacaxi','Coco','Manga','Maracujá','Goiaba','Laranja']},
+      {n:'Cremoso',p:4.99,flavors:['Chocolate','Baunilha','Flocos','Coco','Doce de Leite','Ninho','Paçoca','Milho Verde','Café']},
+      {n:'Especial',p:6.99,flavors:['Oreo','KitKat','Bis','Nutella','Pistache','Brownie','Trufado','Prestígio','Ferrero','Kinder']}
+    ]
+  }
+};
+
+// ===== STATE =====
+let cart = JSON.parse(localStorage.getItem('fb_cart')||'[]');
+let currentUser = JSON.parse(localStorage.getItem('fb_user')||'null');
+let curPage = 'home';
+let prevPage = 'home';
+let curCat = null;
+let curSorveteType = 'Casquinha';
+let curPicoleType = 0;
+let pollingInterval = null;
+
+let cust = {cat:null,size:null,type:null,step:1,steps:[],sel:{}};
+
+// ===== INIT =====
+document.getElementById('rPhone').addEventListener('input', maskPhone);
+document.getElementById('rCPF').addEventListener('input', maskCPF);
+updateCartUI();
+updateUserBtn();
+
+function maskPhone(e){
+  let v=e.target.value.replace(/\D/g,'');
+  if(v.length>11)v=v.slice(0,11);
+  if(v.length>6)v=`(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  else if(v.length>2)v=`(${v.slice(0,2)}) ${v.slice(2)}`;
+  else if(v.length>0)v=`(${v}`;
+  e.target.value=v;
+}
+function maskCPF(e){
+  let v=e.target.value.replace(/\D/g,'');
+  if(v.length>11)v=v.slice(0,11);
+  if(v.length>9)v=`${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6,9)}-${v.slice(9)}`;
+  else if(v.length>6)v=`${v.slice(0,3)}.${v.slice(3,6)}.${v.slice(6)}`;
+  else if(v.length>3)v=`${v.slice(0,3)}.${v.slice(3)}`;
+  e.target.value=v;
+}
+
+// ===== NAVIGATION =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){prevPage=curPage;curPage='home';showPage('page-home');updateFloating();}
+function goBack(){
+  if(prevPage&&prevPage!==curPage){curPage=prevPage;showPage('page-'+prevPage);}
+  else goHome();
+  updateFloating();
+}
+function goToCart(){prevPage=curPage;curPage='cart';renderCart();showPage('page-cart');updateFloating();}
+
+// ===== CATEGORY =====
+function goToCategory(cat){
+  prevPage=curPage;curPage='category';curCat=cat;
+  const titles={acai:'🍇 Açaí',sorvete:'🍦 Sorvete',milkshake:'🥤 Milkshake',picole:'🍭 Picolés'};
+  document.getElementById('catTitle').textContent=titles[cat];
+  const tabs=document.getElementById('typeTabs');
+  if(cat==='sorvete'){tabs.style.display='flex';renderSorveteTabs();}
+  else if(cat==='picole'){tabs.style.display='flex';renderPicoleTabs();}
+  else tabs.style.display='none';
+  renderProducts();
+  showPage('page-category');
+  updateFloating();
+}
+
+function renderSorveteTabs(){
+  const tabs=document.getElementById('typeTabs');
+  tabs.innerHTML='';
+  menu.sorvete.types.forEach(t=>{
+    const btn=document.createElement('button');
+    btn.className='type-tab'+(t===curSorveteType?' active':'');
+    btn.textContent=t;
+    btn.onclick=()=>{curSorveteType=t;renderSorveteTabs();renderProducts();};
+    tabs.appendChild(btn);
+  });
+}
+function renderPicoleTabs(){
+  const tabs=document.getElementById('typeTabs');
+  tabs.innerHTML='';
+  menu.picole.types.forEach((t,i)=>{
+    const btn=document.createElement('button');
+    btn.className='type-tab'+(i===curPicoleType?' active':'');
+    btn.textContent=`${t.n} · R$ ${t.p.toFixed(2).replace('.',',')}`;
+    btn.onclick=()=>{curPicoleType=i;renderPicoleTabs();renderProducts();};
+    tabs.appendChild(btn);
+  });
+}
+
+function renderProducts(){
+  const list=document.getElementById('productsList');
+  list.innerHTML='';
+  if(curCat==='acai'){
+    menu.acai.sizes.forEach(s=>{
+      list.appendChild(makeProductCard(`Açaí ${s.n}`,'Monte com frutas, coberturas e complementos',s.p,()=>openCustomizer('acai',s)));
+    });
+  } else if(curCat==='sorvete'){
+    menu.sorvete.sizes[curSorveteType].forEach(s=>{
+      list.appendChild(makeProductCard(`${curSorveteType} ${s.n}`,'Escolha sabores, coberturas e extras',s.p,()=>openCustomizer('sorvete',s,curSorveteType)));
+    });
+  } else if(curCat==='milkshake'){
+    menu.milkshake.sizes.forEach(s=>{
+      list.appendChild(makeProductCard(`Milkshake ${s.n}`,'Escolha o sabor e personalize',s.p,()=>openCustomizer('milkshake',s)));
+    });
+  } else if(curCat==='picole'){
+    const type=menu.picole.types[curPicoleType];
+    type.flavors.forEach(f=>{
+      list.appendChild(makeProductCard(`Picolé ${f}`,type.n,type.p,()=>addPicole(f,type)));
+    });
+  }
+}
+
+function makeProductCard(name,desc,price,cb){
+  const d=document.createElement('div');
+  d.className='product-card';
+  d.innerHTML=`
+    <div><div class="prod-name">${name}</div><div class="prod-desc">${desc}</div></div>
+    <div class="prod-right">
+      <div class="prod-price">R$ ${price.toFixed(2).replace('.',',')}</div>
+      <button class="add-btn">+</button>
+    </div>`;
+  d.querySelector('.add-btn').onclick=e=>{e.stopPropagation();cb();};
+  d.onclick=cb;
+  return d;
+}
+
+function addPicole(flavor,type){
+  addToCart({id:Date.now()+Math.random(),cat:'picole',name:`Picolé ${flavor}`,details:type.n,price:type.p});
+  toast(`Picolé ${flavor} adicionado! 🍭`);
+}
+
+// ===== CUSTOMIZER =====
+function openCustomizer(cat,size,type=null){
+  cust={cat,size,type,step:1,sel:{fruits:[],toppings:[],extras:[],complements:[]}};
+  if(cat==='acai') cust.steps=['base','fruits','toppings','complements','extras'];
+  else if(cat==='sorvete') cust.steps=['flavors','toppings','extras'];
+  else cust.steps=['flavors','toppings','extras'];
+  const titles={acai:'Montar Açaí 🍇',sorvete:'Montar Sorvete 🍦',milkshake:'Montar Milkshake 🥤'};
+  document.getElementById('custTitle').textContent=titles[cat];
+  renderCustStep();
+  document.getElementById('custOverlay').classList.add('active');
+}
+function closeCustomizer(){document.getElementById('custOverlay').classList.remove('active');}
+
+function calcPrice(){
+  let p=cust.size.p;
+  if(cust.cat==='acai'){
+    p+=Math.max(0,(cust.sel.fruits||[]).length-menu.acai.freeFruits)*menu.acai.extraPrice;
+    p+=Math.max(0,(cust.sel.toppings||[]).length-menu.acai.freeToppings)*menu.acai.extraPrice;
+    p+=Math.max(0,(cust.sel.complements||[]).length-menu.acai.freeComplements)*menu.acai.extraPrice;
+  } else if(cust.cat==='sorvete'){
+    p+=(cust.sel.toppings||[]).length*menu.sorvete.toppingPrice;
+  } else {
+    p+=(cust.sel.toppings||[]).length*menu.milkshake.toppingPrice;
+  }
+  (cust.sel.extras||[]).forEach(e=>p+=e.p);
+  return p;
+}
+
+function renderCustStep(){
+  const stepKey=cust.steps[cust.step-1];
+  const stepNames={base:'Sabor da base',fruits:'Frutas',toppings:'Coberturas',complements:'Complementos',extras:'Extras',flavors:'Sabor'};
+  document.getElementById('custSub').textContent=`Passo ${cust.step} de ${cust.steps.length} — ${stepNames[stepKey]}`;
+
+  // steps bar
+  const bar=document.getElementById('stepsBar');
+  bar.innerHTML='';
+  cust.steps.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='sdot'+(i<cust.step-1?' done':i===cust.step-1?' active':'');
+    bar.appendChild(d);
+  });
+
+  document.getElementById('pricePreview').textContent=fmtBRL(calcPrice());
+
+  const body=document.getElementById('stepBody');
+  body.innerHTML='';
+
+  const lbl=document.createElement('div');
+  lbl.className='step-lbl';
+  const grid=document.createElement('div');
+  grid.className='opts-grid';
+
+  if(stepKey==='base'){
+    lbl.textContent='Escolha o sabor da base';
+    body.appendChild(lbl);
+    menu.acai.bases.forEach(b=>{
+      grid.appendChild(makeOpt(b,'',cust.sel.base===b,true,()=>{cust.sel.base=b;renderCustStep();}));
+    });
+
+  } else if(stepKey==='fruits'){
+    lbl.innerHTML=`Frutas <span class="free-badge">${menu.acai.freeFruits} grátis</span>`;
+    body.appendChild(lbl);
+    const sel=cust.sel.fruits;
+    menu.acai.fruits.forEach(f=>{
+      const isSel=sel.includes(f);
+      const priceLabel=isSel?'':'(sel.length<menu.acai.freeFruits?"grátis":"+R$ 2,00")';
+      const pl=sel.length<menu.acai.freeFruits&&!isSel?'grátis':isSel?'':'+R$ 2,00';
+      grid.appendChild(makeOpt(f,pl,isSel,false,()=>{
+        if(isSel) cust.sel.fruits=sel.filter(x=>x!==f);
+        else cust.sel.fruits.push(f);
+        renderCustStep();
+      }));
+    });
+
+  } else if(stepKey==='toppings'){
+    const free=cust.cat==='acai'?menu.acai.freeToppings:0;
+    const toppList=cust.cat==='acai'?menu.acai.toppings:cust.cat==='sorvete'?menu.sorvete.toppings:menu.milkshake.toppings;
+    const tpPrice=cust.cat==='sorvete'?menu.sorvete.toppingPrice:cust.cat==='milkshake'?menu.milkshake.toppingPrice:menu.acai.extraPrice;
+    if(free>0) lbl.innerHTML=`Coberturas <span class="free-badge">${free} grátis</span>`;
+    else lbl.innerHTML=`Coberturas <span style="font-size:11px;color:var(--grey-dim)">(+R$ ${tpPrice.toFixed(2).replace('.',',')} cada)</span>`;
+    body.appendChild(lbl);
+    const sel=cust.sel.toppings;
+    toppList.forEach(t=>{
+      const isSel=sel.includes(t);
+      const pl=isSel?'':sel.length<free?'grátis':`+R$ ${tpPrice.toFixed(2).replace('.',',')}`;
+      grid.appendChild(makeOpt(t,pl,isSel,false,()=>{
+        if(isSel) cust.sel.toppings=sel.filter(x=>x!==t);
+        else cust.sel.toppings.push(t);
+        renderCustStep();
+      }));
+    });
+
+  } else if(stepKey==='complements'){
+    lbl.innerHTML=`Complementos <span class="free-badge">${menu.acai.freeComplements} grátis</span>`;
+    body.appendChild(lbl);
+    const sel=cust.sel.complements;
+    menu.acai.complements.forEach(c=>{
+      const isSel=sel.includes(c);
+      const pl=isSel?'':sel.length<menu.acai.freeComplements?'grátis':'+R$ 2,00';
+      grid.appendChild(makeOpt(c,pl,isSel,false,()=>{
+        if(isSel) cust.sel.complements=sel.filter(x=>x!==c);
+        else cust.sel.complements.push(c);
+        renderCustStep();
+      }));
+    });
+
+  } else if(stepKey==='extras'){
+    lbl.textContent='Extras (opcional)';
+    body.appendChild(lbl);
+    const extrasList=cust.cat==='acai'?menu.acai.extras:cust.cat==='sorvete'?menu.sorvete.extras:menu.milkshake.extras;
+    const sel=cust.sel.extras;
+    extrasList.forEach(e=>{
+      const isSel=sel.some(x=>x.n===e.n);
+      grid.appendChild(makeOpt(e.n,`+R$ ${e.p.toFixed(2).replace('.',',')}`,isSel,false,()=>{
+        if(isSel) cust.sel.extras=sel.filter(x=>x.n!==e.n);
+        else cust.sel.extras.push(e);
+        renderCustStep();
+      }));
+    });
+
+  } else if(stepKey==='flavors'){
+    lbl.textContent='Escolha o sabor';
+    body.appendChild(lbl);
+    const flList=cust.cat==='sorvete'?menu.sorvete.flavors:menu.milkshake.flavors;
+    const sel=cust.sel.flavors||[];
+    flList.forEach(f=>{
+      const isSel=sel.includes(f);
+      grid.appendChild(makeOpt(f,'',isSel,cust.cat==='milkshake',()=>{
+        if(cust.cat==='milkshake'){cust.sel.flavors=[f];}
+        else{
+          if(isSel) cust.sel.flavors=(sel).filter(x=>x!==f);
+          else{cust.sel.flavors=[...(cust.sel.flavors||[]),f];}
+        }
+        renderCustStep();
+      }));
+    });
+  }
+
+  body.appendChild(grid);
+
+  // nav
+  const prev=document.getElementById('prevBtn');
+  const next=document.getElementById('nextBtn');
+  prev.style.display=cust.step>1?'block':'none';
+  next.textContent=cust.step===cust.steps.length?'🛒 Adicionar ao carrinho':'Continuar →';
+  if(cust.step===cust.steps.length) next.classList.add('confirm');
+  else next.classList.remove('confirm');
+
+  let canNext=true;
+  if(stepKey==='base'&&!cust.sel.base) canNext=false;
+  if(stepKey==='flavors'&&!(cust.sel.flavors&&cust.sel.flavors.length)) canNext=false;
+  next.disabled=!canNext;
+}
+
+function makeOpt(label,price,sel,radio,cb){
+  const btn=document.createElement('button');
+  btn.className='opt'+(sel?' sel':'');
+  btn.innerHTML=`${label}${price?`<div class="opt-price">${price}</div>`:''}`;
+  btn.onclick=cb;
+  return btn;
+}
+
+function prevStep(){if(cust.step>1){cust.step--;renderCustStep();}}
+function nextStep(){
+  if(cust.step<cust.steps.length){cust.step++;renderCustStep();}
+  else addCustToCart();
+}
+
+function addCustToCart(){
+  const price=calcPrice();
+  const catLabels={acai:'Açaí',sorvete:cust.type||'Sorvete',milkshake:'Milkshake'};
+  const name=`${catLabels[cust.cat]} ${cust.size.n}`;
+  const parts=[];
+  if(cust.sel.base) parts.push(`Base: ${cust.sel.base}`);
+  if(cust.sel.flavors?.length) parts.push(`Sabor: ${cust.sel.flavors.join(', ')}`);
+  if(cust.sel.fruits?.length) parts.push(`Frutas: ${cust.sel.fruits.join(', ')}`);
+  if(cust.sel.toppings?.length) parts.push(`Coberturas: ${cust.sel.toppings.join(', ')}`);
+  if(cust.sel.complements?.length) parts.push(`Complementos: ${cust.sel.complements.join(', ')}`);
+  if(cust.sel.extras?.length) parts.push(`Extras: ${cust.sel.extras.map(e=>e.n).join(', ')}`);
+  addToCart({id:Date.now()+Math.random(),cat:cust.cat,name,details:parts.join(' · '),price});
+  closeCustomizer();
+  toast(`${name} adicionado! 🛒`);
+}
+
+// ===== CART =====
+function addToCart(item){cart.push(item);saveCart();updateCartUI();}
+function saveCart(){localStorage.setItem('fb_cart',JSON.stringify(cart));}
+function updateCartUI(){
+  const n=cart.length;
+  const el=document.getElementById('cartCount');
+  n>0?(el.textContent=n,el.classList.remove('hidden')):el.classList.add('hidden');
+  updateFloating();
+}
+function updateFloating(){
+  const btn=document.getElementById('floatingCart');
+  if(cart.length>0&&curPage!=='cart'){
+    document.getElementById('floatingTotal').textContent=fmtBRL(cart.reduce((s,i)=>s+i.price,0));
+    btn.classList.add('visible');
+  } else btn.classList.remove('visible');
+}
+
+function renderCart(){
+  const wrap=document.getElementById('cartContent');
+  const bar=document.getElementById('cartBar');
+  wrap.innerHTML='';
+  if(cart.length===0){
+    wrap.innerHTML=`<div class="cart-empty"><div class="icon">🛒</div><h3>Carrinho vazio</h3><p style="color:var(--grey-dim);margin-top:6px;">Adicione itens pra continuar</p></div>`;
+    bar.style.display='none';
+    return;
+  }
+  const list=document.createElement('div');
+  list.className='cart-items';
+  let total=0;
+  cart.forEach((item,i)=>{
+    total+=item.price;
+    const d=document.createElement('div');
+    d.className='cart-item';
+    d.innerHTML=`
+      <div class="cart-item-top">
+        <div><div class="ci-name">${item.name}</div><div class="ci-price">${fmtBRL(item.price)}</div></div>
+        <button class="ci-remove" onclick="removeItem(${i})">✕</button>
+      </div>
+      ${item.details?`<div class="ci-details">${item.details}</div>`:''}`;
+    list.appendChild(d);
+  });
+  wrap.appendChild(list);
+  document.getElementById('cartBarTotal').textContent=fmtBRL(total);
+  bar.style.display='flex';
+}
+
+function removeItem(i){cart.splice(i,1);saveCart();updateCartUI();renderCart();}
+
+// ===== AUTH =====
+function openAuth(){document.getElementById('authOverlay').classList.add('active');}
+function closeAuth(){document.getElementById('authOverlay').classList.remove('active');}
+function switchTab(t){
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('regForm').style.display=t==='reg'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',t==='login');
+  document.getElementById('tabReg').classList.toggle('active',t==='reg');
+}
+
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pwd=document.getElementById('loginPwd').value;
+  if(!email||!pwd){alert('Preencha e-mail e senha.');return;}
+  const users=JSON.parse(localStorage.getItem('fb_users')||'{}');
+  const user=users[email];
+  if(!user||user.pwd!==pwd){alert('E-mail ou senha incorretos.');return;}
+  currentUser=user;
+  localStorage.setItem('fb_user',JSON.stringify(user));
+  updateUserBtn();closeAuth();
+  toast(`Bem-vindo(a), ${user.name.split(' ')[0]}! 👋`);
+}
+
+function doRegister(){
+  const name=document.getElementById('rName').value.trim();
+  const email=document.getElementById('rEmail').value.trim();
+  const pwd=document.getElementById('rPwd').value;
+  const phone=document.getElementById('rPhone').value.trim();
+  const cpf=document.getElementById('rCPF').value.trim();
+  const street=document.getElementById('rStreet').value.trim();
+  const num=document.getElementById('rNum').value.trim();
+  const comp=document.getElementById('rComp').value.trim();
+  const neigh=document.getElementById('rNeigh').value.trim();
+  const city=document.getElementById('rCity').value.trim();
+  const state=document.getElementById('rState').value.trim().toUpperCase();
+  if(!name||!email||!pwd||!phone||!cpf||!street||!num||!neigh||!city||!state){alert('Preencha todos os campos obrigatórios.');return;}
+  const users=JSON.parse(localStorage.getItem('fb_users')||'{}');
+  if(users[email]){alert('Esse e-mail já está cadastrado.');return;}
+  const user={name,email,pwd,phone,cpf,address:{street,num,comp,neigh,city,state}};
+  users[email]=user;
+  localStorage.setItem('fb_users',JSON.stringify(users));
+  currentUser=user;
+  localStorage.setItem('fb_user',JSON.stringify(user));
+  updateUserBtn();closeAuth();
+  toast(`Conta criada! Bem-vindo(a), ${name.split(' ')[0]}! 🎉`);
+}
+
+function updateUserBtn(){
+  const btn=document.getElementById('userBtn');
+  if(currentUser){
+    btn.textContent=currentUser.name.split(' ')[0];
+    btn.onclick=()=>{if(confirm(`Sair da conta de ${currentUser.name}?`)){currentUser=null;localStorage.removeItem('fb_user');updateUserBtn();}};
+  } else {
+    btn.textContent='Entrar';
+    btn.onclick=openAuth;
+  }
+}
+
+// ===== CHECKOUT =====
+async function startCheckout(){
+  if(!currentUser){openAuth();return;}
+  const total=cart.reduce((s,i)=>s+i.price,0);
+  const a=currentUser.address;
+  const addr=`${a.street}, ${a.num}${a.comp?' '+a.comp:''}, ${a.neigh}, ${a.city}-${a.state}`;
+
+  document.getElementById('pixVal').textContent=fmtBRL(total);
+  document.getElementById('pixPending').style.display='block';
+  document.getElementById('pixDone').style.display='none';
+  document.getElementById('pixOverlay').classList.add('active');
+
+  try{
+    const res=await fetch('/api/criar-pix',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({total,cart,customer:{name:currentUser.name,email:currentUser.email,phone:currentUser.phone,cpf:currentUser.cpf,address:addr}})
+    });
+    const data=await res.json();
+    if(!res.ok){alert('Erro ao gerar Pix: '+(data.error||'tente novamente.'));document.getElementById('pixOverlay').classList.remove('active');return;}
+    document.getElementById('pixCode').textContent=data.pixCode||'—';
+    if(data.pixImage) document.getElementById('pixQR').src=data.pixImage;
+    else if(data.pixBase64) document.getElementById('pixQR').src=`data:image/png;base64,${data.pixBase64}`;
+    if(data.transactionId) startPolling(data.transactionId);
+  } catch(e){alert('Erro de conexão. Tente novamente.');document.getElementById('pixOverlay').classList.remove('active');}
+}
+
+function startPolling(txId){
+  if(pollingInterval)clearInterval(pollingInterval);
+  pollingInterval=setInterval(async()=>{
+    try{
+      const res=await fetch(`/api/status-pix?id=${encodeURIComponent(txId)}`);
+      const data=await res.json();
+      if(data.status==='COMPLETED'){
+        clearInterval(pollingInterval);
+        cart=[];saveCart();updateCartUI();
+        document.getElementById('pixPending').style.display='none';
+        document.getElementById('pixDone').style.display='block';
+      }
+    }catch(e){}
+  },5000);
+}
+
+document.getElementById('pixOverlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('pixOverlay')){
+    document.getElementById('pixOverlay').classList.remove('active');
+    if(pollingInterval)clearInterval(pollingInterval);
+  }
+});
+document.getElementById('authOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('authOverlay'))closeAuth();});
+document.getElementById('custOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('custOverlay'))closeCustomizer();});
+
+function copyPix(){
+  navigator.clipboard.writeText(document.getElementById('pixCode').textContent).then(()=>toast('Código Pix copiado! ✅'));
+}
+
+// ===== UTILS =====
+function fmtBRL(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.opacity='1';
+  clearTimeout(toastT);toastT=setTimeout(()=>el.style.opacity='0',2500);
+}
+</script>
+</body>
+</html>
