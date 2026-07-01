@@ -221,7 +221,7 @@ footer{padding:24px 20px;text-align:center;color:var(--faint);font-size:12px;bor
         <div class="promo-value">2 açaís 300ml por R$ 19,90</div>
         <div class="promo-desc">Aproveite enquanto durar!</div>
       </div>
-      <button class="promo-cta" onclick="goToCategory('acai')">Pedir agora</button>
+      <button class="promo-cta" onclick="addPromo()">Pedir agora</button>
     </div>
   </div>
   <div class="sec-label">O que você quer hoje?</div>
@@ -533,6 +533,26 @@ function makeProductCard(name,desc,price,cb){
   d.querySelector('.add-btn').onclick=e=>{e.stopPropagation();cb();};
   d.onclick=cb;
   return d;
+}
+
+function addPromo(){
+  // Adiciona 2 açaís 300ml com preço promocional (R$ 9,95 cada = R$ 19,90 no total)
+  addToCart({
+    id: Date.now()+Math.random(),
+    cat:'acai',
+    name:'Açaí 300ml — Promoção 🔥',
+    details:'2 unidades · Preço promocional',
+    price: 9.95
+  });
+  addToCart({
+    id: Date.now()+Math.random(),
+    cat:'acai',
+    name:'Açaí 300ml — Promoção 🔥',
+    details:'2 unidades · Preço promocional',
+    price: 9.95
+  });
+  toast('2 açaís 300ml adicionados! 🍇');
+  setTimeout(()=>goToCart(), 800);
 }
 
 function addPicole(flavor,type){
